@@ -1,0 +1,30 @@
+import { useAtom } from "jotai";
+import { activeConnectionAtom } from "../console.atoms";
+import { Connection } from "@/domain/models/connection";
+import { connectionsAtom } from "./sidebar.atoms";
+import { generateNewConnection } from "@/test/mock/connections/factory";
+
+export const useSidebarModel = () => {
+  const [connections, setConnections] = useAtom(connectionsAtom);
+  const [activeConnection, setActiveConnection] = useAtom(activeConnectionAtom);
+
+  const handleDbClickConnection = (connection: Connection) => {
+    setActiveConnection(connection);
+  };
+
+  const handleNewConnection = () => {
+    setConnections((prev) => [...prev, generateNewConnection()]);
+  };
+
+  const handleResetConnections = () => {
+    setConnections([]);
+  };
+
+  return {
+    activeConnection,
+    connections,
+    handleDbClickConnection,
+    handleNewConnection,
+    handleResetConnections,
+  };
+};
