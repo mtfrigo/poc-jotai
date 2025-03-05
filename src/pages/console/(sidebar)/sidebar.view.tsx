@@ -31,6 +31,7 @@ export const SidebarView = ({
         {connections.map((connection) => {
           return (
             <Button
+              variant="outline"
               className={cn("w-full", {
                 "bg-green-500 hover:bg-green-400":
                   activeConnection?.id === connection.id,

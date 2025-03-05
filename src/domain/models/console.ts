@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FlavorSchema } from "./flavor";
-import { OracleExecutionResultSchema } from "@/data/execution-service/execution.contracts";
+import { OracleExecuteBodySchema, OracleResultContentSchema } from "@/data/execution-service/execution.contracts";
 
 export const BaseConsoleSchema = z.object({
   id: z.string(),
@@ -8,11 +8,17 @@ export const BaseConsoleSchema = z.object({
   executedAt: z.coerce.date().optional(),
 });
 
+export const OracleResultSchema = z.object({
+  content: OracleResultContentSchema.nullish(),
+  input: OracleExecuteBodySchema
+})
+
 export const OracleConsoleSchema = BaseConsoleSchema.extend({
   flavor: z.literal(FlavorSchema.Enum.ORACLE),
   schema: z.string().nullish(),
   statement: z.string().nullish(),
-  result: OracleExecutionResultSchema.nullish(),
+  status: z.enum(['IDLE', 'PENDING', 'SUCCESS', 'ERROR']).default('IDLE'),
+  result: OracleResultSchema.nullish(),
 });
 
 export const MongoConsoleSchema = BaseConsoleSchema.extend({

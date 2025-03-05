@@ -1,24 +1,51 @@
-import { useAtom, useSetAtom } from "jotai";
-import { panelIdAtom, panelsAtom } from "./panel.atoms";
-import { useEffect } from "react";
+import { useAtom, useAtomValue } from "jotai";
 
-export const usePanelModel = (connectionId: string) => {
-  const [panelId, setPanelId] = useAtom(panelIdAtom);
-  const [panels, setPanels] = useAtom(panelsAtom);
+import { activeConnectionAtom } from "../console.atoms";
+import { panelAtom } from "./panel.atoms";
+import { v4 as uuidv4 } from "uuid";
+import { Tab } from "@/domain/models/tab";
 
-  useEffect(() => {
-    setPanelId(connectionId);
+export const usePanelModel = () => {
+  const connection = useAtomValue(activeConnectionAtom)
+  const [panel, setPanel] = useAtom(panelAtom)
 
-    return () => {
-      setPanelId(null);
-    };
-  }, [connectionId, setPanelId]);
 
-  useEffect(() => {
-    if (panelId) {
-      console.log({ panelId });
+  const handleSelectTab = (id: string) => {
+    if(!panel) return;
+
+    setPanel({...panel, activeTab: id})
+  }
+
+  const handleAddTab = () => {
+    const tab: Tab = {
+      id: uuidv4(),
+      label: connection?.name ?? 'Tab'
     }
-  }, [panelId]);
 
-  return {};
+    setPanel({
+      ...panel,
+      tabs: [
+        ...panel?.tabs ?? [],
+        tab
+      ],
+      activeTab: tab.id,
+    })
+  }
+
+  const handleResetTabs = () => {
+    setPanel({
+      ...panel,
+      tabs: [],
+      activeTab: null,
+    })
+  }
+
+  return {
+    connection,
+    panel,
+
+    handleAddTab,
+    handleResetTabs,
+    handleSelectTab
+  };
 };

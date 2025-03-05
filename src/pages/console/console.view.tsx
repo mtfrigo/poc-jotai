@@ -1,10 +1,7 @@
 import { Panel } from "./(panel)/panel.view-model";
 import { Sidebar } from "./(sidebar)/sidebar.view-model";
-import { useConsoleModel } from "./console.model";
 
-export const ConsolePageView = (model: ReturnType<typeof useConsoleModel>) => {
-  const { activeConnection } = model;
-
+export const ConsolePageView = () => {
   return (
     <div className="flex-1 flex justify-center items-center">
       <div className="flex w-[1000px]  h-[600px]">
@@ -12,11 +9,7 @@ export const ConsolePageView = (model: ReturnType<typeof useConsoleModel>) => {
           <Sidebar />
         </div>
         <div className="flex w-full border">
-          {activeConnection ? (
-            Panel(activeConnection)
-          ) : (
-            <div>No connection</div>
-          )}
+          {Panel()}
         </div>
       </div>
     </div>

@@ -1,56 +1,84 @@
-import { useAtom, useSetAtom } from "jotai";
-import { useEffect, useState } from "react";
-import { oracleConsoleAtom, oraclePanelAtom } from "./oracle-panel.atoms";
-import { Connection } from "@/domain/models/connection";
+import { useAtom, useAtomValue, useSetAtom,  } from "jotai";
+import { useEffect, useMemo, useState } from "react";
+import { consoleIdAtom, oracleConsoleAtom,  } from "./oracle-panel.atoms";
 import { toast } from "sonner";
-import { ExecuteServiceContract } from "@/data/execution-service/execution.contracts";
+import { OracleExecuteBody, OracleExecuteServiceContract } from "@/data/execution-service/execution.contracts";
+import { activeConnectionAtom } from "../../console.atoms";
 
 type UseOraclePanelProps = {
-  connection: Connection;
-  executionService: ExecuteServiceContract;
+  consoleId: string;
+  executionService: OracleExecuteServiceContract;
 };
 
 export const useOraclePanelModel = ({
-  connection,
+  consoleId,
   executionService,
 }: UseOraclePanelProps) => {
+  const connection = useAtomValue(activeConnectionAtom);
+  const setConsoleId = useSetAtom(consoleIdAtom);
   const [oracleConsole, setOracleConsole] = useAtom(oracleConsoleAtom);
-  const [oraclePanel, setOraclePanel] = useAtom(oraclePanelAtom);
   const [statement, setStatement] = useState("");
+
+  useEffect(() => {
+    if(!consoleId)  return;
+
+    setConsoleId(consoleId);
+  }, [consoleId, setConsoleId]);
 
   useEffect(() => {
     setStatement(oracleConsole?.statement ?? "");
   }, [oracleConsole]);
 
-  const handleExecute = async () => {
+  const execute = async (input: OracleExecuteBody) => {
     const toastId = toast.loading("Executando...");
 
-    // setOracleConsole({
-    //   ...oracleConsole,
-    //   result: null,
-    //   statement,
-    //   executedAt: new Date(),
-    // });
-
-    const result = await executionService.exec({
-      body: {
-        statement,
+    setOracleConsole({
+      ...oracleConsole,
+      result: {
+        ...oracleConsole.result,
+        input,
+        content: null
       },
-      connectionId: connection.id,
+      statement,
+      status: 'PENDING',
+      executedAt: new Date(),
     });
+
+    const content = await executionService.exec(input);
 
     toast.dismiss(toastId);
     toast.success("Executed successfully");
 
-    // setOracleConsole({
-    //   ...oracleConsole,
-    //   result,
-    //   statement,
-    //   executedAt: new Date(),
-    // });
+    setOracleConsole({
+      ...oracleConsole,
+      result: {
+        ...oracleConsole.result,
+        input,
+        content
+      },
+      statement,
+      status: 'SUCCESS',
+      executedAt: new Date(),
+    });
+
+  }
+
+  const handleExecute = async () => {
+    if(!connection) return;
+
+    const input = {
+      body: {
+        statement,
+      },
+      connectionId: connection.id,
+    }
+
+    execute(input)
   };
 
   const handleSaveConsole = () => {
+    if(!oracleConsole) return;
+
     setOracleConsole({
       ...oracleConsole,
       statement,
@@ -59,15 +87,45 @@ export const useOraclePanelModel = ({
     toast.success("Console saved");
   };
 
+  const handleRefresh = () => {
+    if(!oracleConsole.result?.input) return;
+
+    execute(oracleConsole.result.input)
+
+  }
+
+  const handleCloseExecution = () => {
+
+    setOracleConsole({
+      ...oracleConsole,
+      executedAt: undefined,
+      status: 'IDLE',
+      result: undefined
+    })
+  }
+
+  const isRefreshDisabled = useMemo(() => {
+    return !['ERROR', 'SUCCESS'].includes( oracleConsole.status) 
+  }, [oracleConsole])
+
+  const isExecuteDisabled = useMemo(() => {
+    return oracleConsole.status === 'PENDING'
+  }, [oracleConsole])
+
   return {
-    tabs: oraclePanel?.tabs ?? [],
     statement,
-    result: oracleConsole?.result,
-    connectionName: connection.name,
-    executedAt: oracleConsole?.executedAt,
+    result: oracleConsole.result,
+    connectionName: connection?.name ?? "" ,
+    executedAt: oracleConsole.executedAt,
+    status: oracleConsole.status,
+
+    isRefreshDisabled,
+    isExecuteDisabled,
 
     handleExecute,
+    handleRefresh,
     handleSaveConsole,
+    handleCloseExecution,
     handleChangeStatement: setStatement,
   };
 };

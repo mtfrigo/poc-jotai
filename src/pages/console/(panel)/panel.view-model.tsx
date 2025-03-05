@@ -1,22 +1,9 @@
-import { Connection } from "@/domain/models/connection";
-import { OraclePanel } from "./(oracle)/oracle-panel.view-model";
-import { MongoPanel } from "./(mongo)/mongo-panel.view-model";
-import { useCallback } from "react";
+
 import { usePanelModel } from "./panel.model";
+import { PanelView } from "./panel.view";
 
-export const Panel = (connection: Connection) => {
-  const model = usePanelModel(connection.id);
+export const Panel = () => {
+  const model = usePanelModel();
 
-  const getFlavorPanel = useCallback(() => {
-    switch (connection.flavor) {
-      case "MONGO":
-        return <MongoPanel connection={connection} />;
-      case "ORACLE":
-        return <OraclePanel connection={connection} />;
-      default:
-        return <div>Unknown flavor</div>;
-    }
-  }, [connection]);
-
-  return <>{getFlavorPanel()}</>;
+  return <PanelView {...model} />;
 };
