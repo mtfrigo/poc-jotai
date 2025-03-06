@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { useSidebarModel } from "./sidebar.model";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/tailwind-merge/utils";
 
 export const SidebarView = ({
   activeConnection,

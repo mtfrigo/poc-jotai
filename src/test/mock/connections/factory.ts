@@ -1,4 +1,4 @@
-import { Connection } from "@/domain/models/connection";
+import { Connection } from "@/modules/console/schemas/connection";
 import { faker } from "@faker-js/faker";
 
 export const generateNewConnection = () => {

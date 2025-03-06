@@ -4,7 +4,7 @@ import { usePanelModel } from "./panel.model";
 import { OraclePanel } from "./(oracle)/oracle-panel.view-model";
 import { MongoPanel } from "./(mongo)/mongo-panel.view-model";
 import { useCallback } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/tailwind-merge/utils";
 
 export const PanelView = ({
   panel,

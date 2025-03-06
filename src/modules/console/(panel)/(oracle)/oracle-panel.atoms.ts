@@ -1,4 +1,4 @@
-import { OracleConsole } from "@/domain/models/console";
+import { OracleConsole } from "@/modules/console/schemas/console";
 import { atom } from "jotai";
 import { activeConnectionAtom } from "../../console.atoms";
 

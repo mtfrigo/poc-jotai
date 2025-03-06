@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FlavorSchema } from "./flavor";
-import { OracleExecuteBodySchema, OracleResultContentSchema } from "@/data/execution-service/execution.contracts";
+import { OracleExecuteBodySchema, OracleResultContentSchema } from "../api/execution/execution.contracts";
 
 export const BaseConsoleSchema = z.object({
   id: z.string(),

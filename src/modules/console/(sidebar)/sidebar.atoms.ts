@@ -1,4 +1,4 @@
-import { Connection } from "@/domain/models/connection";
+import { Connection } from "@/modules/console/schemas/connection";
 import { atom } from "jotai";
 
 export const connectionsAtom = atom<Connection[]>([]);

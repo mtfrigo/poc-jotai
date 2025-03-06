@@ -2,8 +2,8 @@ import { useAtom, useAtomValue, useSetAtom,  } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 import { consoleIdAtom, oracleConsoleAtom,  } from "./oracle-panel.atoms";
 import { toast } from "sonner";
-import { OracleExecuteBody, OracleExecuteServiceContract } from "@/data/execution-service/execution.contracts";
 import { activeConnectionAtom } from "../../console.atoms";
+import { OracleExecuteBody, OracleExecuteServiceContract } from "../../api/execution/execution.contracts";
 
 type UseOraclePanelProps = {
   consoleId: string;
@@ -66,7 +66,7 @@ export const useOraclePanelModel = ({
   const handleExecute = async () => {
     if(!connection) return;
 
-    const input = {
+    const input: OracleExecuteBody = {
       body: {
         statement,
       },
@@ -91,7 +91,6 @@ export const useOraclePanelModel = ({
     if(!oracleConsole.result?.input) return;
 
     execute(oracleConsole.result.input)
-
   }
 
   const handleCloseExecution = () => {

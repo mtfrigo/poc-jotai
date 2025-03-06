@@ -1,10 +1,8 @@
-import {
-  OracleExecuteServiceContract,
-  OracleExecuteBody,
-} from "@/data/execution-service/execution.contracts";
+
+import { OracleExecuteBody, OracleExecuteServiceContract } from "@/modules/console/api/execution/execution.contracts";
 import { faker } from "@faker-js/faker";
 
-export class InMemoryExecuteService implements OracleExecuteServiceContract {
+export class InMemoryOracleExecuteService implements OracleExecuteServiceContract {
   async exec(body: OracleExecuteBody) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

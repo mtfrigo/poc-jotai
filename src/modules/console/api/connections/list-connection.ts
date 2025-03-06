@@ -1,4 +1,4 @@
-import { Connection } from "@/domain/models/connection";
+import { Connection } from "@/modules/console/schemas/connection";
 
 export type ListConnectionServiceContract = {
   exec: () => Promise<Connection[]>;

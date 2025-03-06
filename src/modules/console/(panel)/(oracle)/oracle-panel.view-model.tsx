@@ -1,10 +1,10 @@
 import { useOraclePanelModel } from "./oracle-panel.model";
 import { OraclePanelView } from "./oracle-panel.view";
-import { InMemoryExecuteService } from "@/test/mock/execution-service";
+import { InMemoryOracleExecuteService } from "@/test/mock/execution-service";
 
 export const OraclePanel = ({ consoleId }: { consoleId: string }) => {
   const mockService = {
-    executeService: new InMemoryExecuteService(),
+    executeService: new InMemoryOracleExecuteService(),
   };
 
   const model = useOraclePanelModel({

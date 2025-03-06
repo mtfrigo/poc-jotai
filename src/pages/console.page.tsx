@@ -1,5 +1,5 @@
-import { Panel } from "./(panel)/panel.view-model";
-import { Sidebar } from "./(sidebar)/sidebar.view-model";
+import { Panel } from "@/modules/console/(panel)/panel.view-model";
+import { Sidebar } from "@/modules/console/(sidebar)/sidebar.view-model";
 
 export const ConsolePageView = () => {
   return (

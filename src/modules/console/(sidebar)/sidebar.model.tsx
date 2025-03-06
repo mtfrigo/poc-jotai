@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { activeConnectionAtom } from "../console.atoms";
-import { Connection } from "@/domain/models/connection";
+import { Connection } from "@/modules/console/schemas/connection";
 import { connectionsAtom } from "./sidebar.atoms";
 import { generateNewConnection } from "@/test/mock/connections/factory";
 

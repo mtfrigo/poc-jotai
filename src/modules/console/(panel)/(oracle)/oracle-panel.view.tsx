@@ -1,5 +1,5 @@
 import { useOraclePanelModel } from "./oracle-panel.model";
-import { Console } from "@/components/console";
+import { Console } from "@/modules/console/components/console";
 import { Button } from "@/components/ui/button";
 import {
   Table,

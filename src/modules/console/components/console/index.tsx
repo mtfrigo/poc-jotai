@@ -1,5 +1,5 @@
-import { Connection } from "@/domain/models/connection";
-import { cn } from "@/lib/utils";
+import { Connection } from "@/modules/console/schemas/connection";
+import { cn } from "@/shared/libs/tailwind-merge/utils";
 
 const Console = ({ children }: { children: React.ReactNode }) => {
   return <div className="flex flex-col flex-1 overflow-hidden">{children}</div>;

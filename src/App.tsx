@@ -1,6 +1,6 @@
 import { DevTools } from "jotai-devtools";
 import "jotai-devtools/styles.css";
-import { ConsolePageView } from "./pages/console/console.view";
+import { ConsolePageView } from "./pages/console.page";
 
 function App() {
   return (

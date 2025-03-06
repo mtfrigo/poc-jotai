@@ -3,7 +3,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { activeConnectionAtom } from "../console.atoms";
 import { panelAtom } from "./panel.atoms";
 import { v4 as uuidv4 } from "uuid";
-import { Tab } from "@/domain/models/tab";
+import { Tab } from "@/modules/console/schemas/tab";
 
 export const usePanelModel = () => {
   const connection = useAtomValue(activeConnectionAtom)

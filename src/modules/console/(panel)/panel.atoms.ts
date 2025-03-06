@@ -1,4 +1,4 @@
-import { Panel } from "@/domain/models/panel";
+import { Panel } from "@/modules/console/schemas/panel";
 import { atom } from "jotai";
 import { activeConnectionAtom } from "../console.atoms";
 
