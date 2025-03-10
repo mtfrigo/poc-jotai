@@ -44,6 +44,7 @@ export const PanelView = ({
               <Button
                 key={tab.id}
                 size='sm'
+                data-testid="panel-tab-trigger"
                 className={cn({
                   'bg-green-500 hover:bg-green-200': tab.id === panel.activeTab
                 })}

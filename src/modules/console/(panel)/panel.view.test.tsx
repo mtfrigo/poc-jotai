@@ -63,6 +63,29 @@ describe('<Panel />',  () => {
         expect(message).toBeDefined()
     })
 
+    it('should show tabs trigger', () => {
+        const initialConnection = makeConnection({
+            flavor: 'ORACLE',
+        })
+
+        const tabs = [makeTab(), makeTab()];
+        const initialPanel = makePanel({ tabs, activeTab: tabs[0].id})
+        const initialPanels: Record<string, Panel> = {
+            [initialConnection.id]: {
+                ...initialPanel
+            }
+        }
+
+        const { result } = renderWithInjectedAtoms(usePanelModel, [
+            [activeConnectionAtom, initialConnection],
+            [panelsAtom, initialPanels],
+        ])
+
+        const panel = render(<PanelView {...result.current} />)
+
+        expect(panel.getAllByTestId('panel-tab-trigger')).toHaveLength(tabs.length)
+    })
+
     describe("Flavor panel", () => {
         it('should show oracle console', () => {
             const initialConnection = makeConnection({
