@@ -137,7 +137,7 @@ export const OraclePanelView = ({
               <CalendarIcon className="text-slate-500 size-4" />
               Executado em:{" "}
               <span className="text-green-500">
-                {executedAt?.toLocaleDateString() ?? "--/--/----"}
+                {executedAt ? new Date(executedAt)?.toLocaleDateString() : "--/--/----"}
               </span>
             </div>
             <div className="w-px h-full bg-slate-300" />
