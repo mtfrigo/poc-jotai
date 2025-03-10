@@ -3,7 +3,7 @@ import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { usePanelModel } from "./panel.model";
 import { OraclePanel } from "./(oracle)/oracle-panel.view-model";
 import { MongoPanel } from "./(mongo)/mongo-panel.view-model";
-import { useCallback } from "react";
+import {   useCallback } from "react";
 import { cn } from "@/shared/libs/tailwind-merge/utils";
 
 export const PanelView = ({
@@ -62,8 +62,8 @@ export const PanelView = ({
               <StopCircleIcon className="text-red-500" />
             </Button>
           </div>
-          <div className="flex flex-1 overflow-hidden">
-            {!panel?.activeTab && <div className="flex flex-1 items-center justify-center">Nenhum console selecionado</div>}
+          <div className="flex flex-1 overflow-hidden" >
+            {!panel?.activeTab && <div className="flex flex-1 items-center justify-center">No Console selected</div>}
             {panel?.activeTab && getFlavorPanel(panel.activeTab)}
           </div>
         </div>

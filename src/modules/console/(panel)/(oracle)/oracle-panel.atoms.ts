@@ -1,8 +1,13 @@
 import { OracleConsole } from "@/modules/console/schemas/console";
 import { atom } from "jotai";
 import { activeConnectionAtom } from "../../console.atoms";
+import { atomWithStorage } from "jotai/utils";
 
-export const oracleConsolesAtom = atom<Record<string, OracleConsole>>({});
+
+export const oracleConsolesAtom = atomWithStorage<Record<string, OracleConsole>>(
+  '@oracle-consoles',
+  {}
+);
 oracleConsolesAtom.debugLabel = "oracleConsolesAtom";
 
 export const consoleIdAtom = atom<string | null>(null);

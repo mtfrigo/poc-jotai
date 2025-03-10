@@ -1,5 +1,5 @@
 import { Connection } from "@/modules/console/schemas/connection";
-import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
-export const activeConnectionAtom = atom<null | Connection>(null);
+export const activeConnectionAtom = atomWithStorage<null | Connection>('@active-connection', null);
 activeConnectionAtom.debugLabel = "activeConnectionAtom";

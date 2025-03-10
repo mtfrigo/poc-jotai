@@ -14,10 +14,10 @@ export const SidebarView = ({
   return (
     <div className="flex flex-1 h-full flex-col gap-1 ">
       <div className="w-full h-10 flex gap-1 p-1 items-center justify-between">
-        <Button size="sm" variant="ghost" onClick={handleNewConnection}>
+        <Button size="sm" variant="ghost" onClick={handleNewConnection} data-testid='new-connection-button'>
           New <PlusCircleIcon className="text-green-500" />
         </Button>
-        <Button size="sm" variant="ghost" onClick={handleResetConnections}>
+        <Button size="sm" variant="ghost" onClick={handleResetConnections} data-testid='reset-connection-button'>
           Reset <StopCircleIcon className="text-red-500" />
         </Button>
       </div>
@@ -27,7 +27,7 @@ export const SidebarView = ({
         <Input placeholder="Filter..." />
       </div>
       <hr className="" />
-      <div className="h-full flex-1 p-1 flex-col gap-1 flex">
+      <div className="h-full flex-1 p-1 flex-col gap-1 flex" data-testid='connection-list'>
         {connections.map((connection) => {
           return (
             <Button

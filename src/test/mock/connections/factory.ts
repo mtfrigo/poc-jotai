@@ -1,7 +1,11 @@
 import { Connection } from "@/modules/console/schemas/connection";
 import { faker } from "@faker-js/faker";
 
-export const generateNewConnection = () => {
+export function makeConnection(props: Partial<Connection>): Connection
+export function makeConnection(): Connection
+export function makeConnection(props?: Partial<Connection>) {
+  const data = props ?? {}
+
   const connection: Connection = {
     id: faker.string.uuid(),
     name: `${faker.commerce.product()}Database`,
@@ -11,8 +15,9 @@ export const generateNewConnection = () => {
       // "POSTGRES",
       // "MYSQL",
     ]),
-    console: null,
+    ...data
   };
 
   return connection;
 };
+

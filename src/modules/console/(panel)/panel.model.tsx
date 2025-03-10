@@ -2,13 +2,12 @@ import { useAtom, useAtomValue } from "jotai";
 
 import { activeConnectionAtom } from "../console.atoms";
 import { panelAtom } from "./panel.atoms";
-import { v4 as uuidv4 } from "uuid";
 import { Tab } from "@/modules/console/schemas/tab";
+import { generateUUID } from "@/shared/libs/uuid";
 
 export const usePanelModel = () => {
   const connection = useAtomValue(activeConnectionAtom)
   const [panel, setPanel] = useAtom(panelAtom)
-
 
   const handleSelectTab = (id: string) => {
     if(!panel) return;
@@ -18,7 +17,7 @@ export const usePanelModel = () => {
 
   const handleAddTab = () => {
     const tab: Tab = {
-      id: uuidv4(),
+      id: generateUUID(),
       label: connection?.name ?? 'Tab'
     }
 

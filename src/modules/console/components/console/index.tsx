@@ -1,12 +1,13 @@
 import { Connection } from "@/modules/console/schemas/connection";
 import { cn } from "@/shared/libs/tailwind-merge/utils";
+import { HTMLAttributes  } from "react";
 
-const Console = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col flex-1 overflow-hidden">{children}</div>;
+const Console = ({ children, className, ...rest }: { children: React.ReactNode, className?: string } & HTMLAttributes<HTMLDivElement>) => {
+  return <div data-testid="console-root" className={cn("flex flex-col flex-1 overflow-hidden border rounded-lg ", className)} {...rest}>{children}</div>;
 };
 
-const ConsoleToolbar = ({ children }: { children: React.ReactNode }) => {
-  return <div className="px-1 flex gap-1 h-8">{children}</div>;
+const ConsoleToolbar = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+  return <div className={cn("px-1 flex gap-1 h-8", className)}>{children}</div>;
 };
 
 const ConsoleFlavor = ({
@@ -30,22 +31,22 @@ const ConsoleFlavor = ({
   );
 };
 
-const ConsolePanel = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex-1 flex flex-col overflow-hidden border-b">{children}</div>;
+const ConsolePanel = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+  return <div className={cn("flex-1 flex flex-col overflow-hidden border-b", className)}>{children}</div>;
 };
 
-const ConsoleBody = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex-1 p-1 flex">{children}</div>;
+const ConsoleBody = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+  return <div className={cn("flex-1 p-1 flex", className)}>{children}</div>;
 };
 
-const ConsoleResult = ({ children }: { children: React.ReactNode }) => {
+const ConsoleResult = ({ children, className }: { children: React.ReactNode, className?: string }) => {
   return (
-    <div className="flex-1 overflow-auto flex-col p-1 flex">{children}</div>
+    <div className={cn("flex-1 overflow-auto flex-col p-1 flex", className)}>{children}</div>
   );
 };
 
-const ConsoleFooter = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex gap-1 p-1 text-sm border-t">{children}</div>;
+const ConsoleFooter = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+  return <div className={cn("flex gap-1 p-1 text-sm border-t", className)}>{children}</div>;
 };
 
 Console.Toolbar = ConsoleToolbar;

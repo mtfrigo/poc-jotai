@@ -40,7 +40,7 @@ export const OraclePanelView = ({
   handleChangeStatement,
 }: ReturnType<typeof useOraclePanelModel>) => {
   return (
-    <Console>
+    <Console data-testid="oracle-console">
       <Console.Panel>
       <Console.Flavor flavor="ORACLE" name={`${connectionName} ${status}`} />
       <Console.Toolbar>
