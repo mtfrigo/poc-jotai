@@ -1,27 +1,30 @@
-import axios, { AxiosError, AxiosInstance } from 'axios'
-import { HttpClient, HttpRequest } from './http-client.contracts'
+import axios, { AxiosError, AxiosInstance } from "axios";
+import { HttpClient, HttpRequest } from "./http-client.contracts";
 
-const baseURL = 'http://localhost:3000'
+const URL = "http://localhost:8080/api";
 
-export class AxiosHttpClient implements HttpClient {
-	constructor(private api: AxiosInstance = axios) {}
+export class AxiosHttpClientAdapter implements HttpClient {
+  constructor(private api: AxiosInstance = axios) {}
 
-	async request<TResponse, TBody>(props: HttpRequest<TBody>): Promise<TResponse> {
-		const { endpoint, method, body, headers, params } = props
-		try {
-			const { data } = await this.api.request<TResponse>({
-				method,
-				headers,
-				data: body,
-				url: `${baseURL}${endpoint}`,
-				params,
-			})
-			return data
-		} catch (er) {
-			const error = er as AxiosError
-			const status = error.response?.status || 500
-			const message = error.response?.data || error.message
-			throw new Error(`Request failed with status ${status}: ${message}`)
-		}
-	}
+  async request<R>({
+    endpoint,
+    method,
+    body,
+    headers,
+  }: HttpRequest): Promise<R> {
+    try {
+      const { data } = await this.api.request<R>({
+        method,
+        headers,
+        data: body,
+        url: `${URL}${endpoint}`,
+      });
+      return data;
+    } catch (er) {
+      const error = er as AxiosError;
+      const status = error.response?.status || 500;
+      const message = error.response?.data || error.message;
+      throw new Error(`Request failed with status ${status}: ${message}`);
+    }
+  }
 }
