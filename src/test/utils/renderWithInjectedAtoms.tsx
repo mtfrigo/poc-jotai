@@ -2,6 +2,7 @@ import { useHydrateAtoms } from 'jotai/utils'
 import { Provider } from 'jotai'
 import { renderHook } from "@testing-library/react";
 import { ReactNode } from 'react';
+import { QueryProvider } from './renderWithQueryProvider';
 
 const HydrateAtoms = ({initialValues, children}: { initialValues: any, children: ReactNode}) => {
     useHydrateAtoms(initialValues)
@@ -18,7 +19,7 @@ const TestProvider = ({ initialValues, children}: { initialValues: unknown, chil
 
 export const renderWithInjectedAtoms = <T,>(hook: () => T, initialValues: unknown) => {
     return renderHook(() => hook(), {
-        wrapper: ({children}: { children: ReactNode }) =>  <TestProvider initialValues={initialValues}>{children}</TestProvider>
+        wrapper: ({children}: { children: ReactNode }) =>  <QueryProvider><TestProvider initialValues={initialValues}>{children}</TestProvider></QueryProvider>
     })
 
 }

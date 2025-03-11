@@ -2,7 +2,7 @@ import { describe, it, expect} from 'vitest'
 import { useSidebarModel } from './sidebar.model'
 import { connectionsAtom } from './sidebar.atoms'
 import { renderWithInjectedAtoms } from '@/test/utils/renderWithInjectedAtoms'
-import { makeConnection } from '@/test/mock/connections/factory'
+import { makeConnection } from '@/test/mock/factories/connections.factory'
 import { renderHook, waitFor } from '@testing-library/react'
 import { activeConnectionAtom } from '../console.atoms'
 

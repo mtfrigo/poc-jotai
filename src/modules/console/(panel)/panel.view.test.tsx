@@ -2,13 +2,14 @@ import { describe, it, expect} from 'vitest'
 import {  render } from '@testing-library/react'
 import { PanelView } from './panel.view'
 import { usePanelModel } from './panel.model'
-import { makeConnection } from '@/test/mock/connections/factory'
+import { makeConnection } from '@/test/mock/factories/connections.factory'
 import { renderWithInjectedAtoms } from '@/test/utils/renderWithInjectedAtoms'
 import { activeConnectionAtom } from '../console.atoms'
 import { Panel } from '../schemas/panel'
 import {   panelsAtom } from './panel.atoms'
 import { Flavor } from '../schemas/flavor'
-import { makePanel, makeTab } from '@/test/mock/panel/factory'
+import { makePanel, makeTab } from '@/test/mock/factories/panel.factory'
+import { renderWithQueryProvider } from '@/test/utils/renderWithQueryProvider'
 
 const MakePanel = () => {
     const methods = usePanelModel()
@@ -30,7 +31,7 @@ describe('<Panel />',  () => {
 
         const { result } = renderWithInjectedAtoms(usePanelModel, [[activeConnectionAtom, initialConnection]])
 
-        const panel = render(<PanelView {...result.current} />)
+        const panel = renderWithQueryProvider(<PanelView {...result.current} />)
 
         const message = panel.getByText('No Console selected')
         expect(message).toBeDefined()
@@ -57,7 +58,7 @@ describe('<Panel />',  () => {
             [panelsAtom, initialPanels],
         ])
 
-        const panel = render(<PanelView {...result.current} />)
+        const panel = renderWithQueryProvider(<PanelView {...result.current} />)
 
         const message = panel.getByText('Unknown flavor')
         expect(message).toBeDefined()
@@ -81,7 +82,7 @@ describe('<Panel />',  () => {
             [panelsAtom, initialPanels],
         ])
 
-        const panel = render(<PanelView {...result.current} />)
+        const panel = renderWithQueryProvider(<PanelView {...result.current} />)
 
         expect(panel.getAllByTestId('panel-tab-trigger')).toHaveLength(tabs.length)
     })
@@ -105,7 +106,7 @@ describe('<Panel />',  () => {
                 [panelsAtom, initialPanels],
             ])
     
-            const panel = render(<PanelView {...result.current} />)
+            const panel = renderWithQueryProvider(<PanelView {...result.current} />)
     
             const message = panel.getByTestId('oracle-console')
             expect(message).toBeDefined()
