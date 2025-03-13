@@ -5,6 +5,7 @@
 		"dev": "ts-node --files index.ts"
 	},
 	"dependencies": {
+		"@fastify/cors": "^11.0.0",
 		"@prisma/client": "6.5.0",
 		"amqplib": "^0.10.5",
 		"fastify": "^5.2.1",

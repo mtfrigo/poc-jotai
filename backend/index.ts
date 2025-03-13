@@ -5,8 +5,11 @@ import rabbitPlugin from "./src/plugins/rabbitmq";
 import rabbitConsumerPlugin from "./src/plugins/rabbitmq-consumer";
 import exampleRoutes from "./src/routes/example.routes";
 import executionRoutes from "./src/routes/execution.routes";
+import cors from "@fastify/cors";
 
 export const app = fastify();
+
+app.register(cors);
 
 app.register(mongoosePlugin);
 app.register(rabbitPlugin);
