@@ -25,7 +25,7 @@ export async function updateStatusFromQueue(id: string) {
   await new Promise((resolve) => setTimeout(resolve, waitForMs));
 
   const execution = Execution.findOneAndUpdate(
-    { id },
+    { _id: id },
     { status: "SUCCESS", finishedAt: new Date() },
     { new: true }
   );
@@ -33,4 +33,16 @@ export async function updateStatusFromQueue(id: string) {
   console.log(`Update complete`);
 
   return execution;
+}
+
+export async function fetchExecutionById(id: string) {
+  const execution = Execution.findOne({ _id: id });
+
+  return execution;
+}
+
+export async function fetchAllExecutions() {
+  const executions = Execution.find();
+
+  return executions;
 }

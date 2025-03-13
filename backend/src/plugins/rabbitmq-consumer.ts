@@ -22,7 +22,6 @@ async function consumeRabbitMessage(
   try {
     const data = JSON.parse(msg.content.toString());
     console.log("Mensagem consumida: ");
-    console.log({ data });
 
     // do something else
     updateStatusFromQueue(data.id);
