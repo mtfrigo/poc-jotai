@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { FlavorSchema } from "./flavor";
-import { OracleExecuteBodySchema, OracleResultContentSchema } from "../api/execution/execution.contracts";
+import {
+  OracleExecuteBodySchema,
+  OracleResultContentSchema,
+} from "../api/execution/execution.contracts";
 
 export const BaseConsoleSchema = z.object({
   id: z.string(),
@@ -10,14 +13,15 @@ export const BaseConsoleSchema = z.object({
 
 export const OracleResultSchema = z.object({
   content: OracleResultContentSchema.nullish(),
-  input: OracleExecuteBodySchema
-})
+  input: OracleExecuteBodySchema,
+});
 
 export const OracleConsoleSchema = BaseConsoleSchema.extend({
   flavor: z.literal(FlavorSchema.Enum.ORACLE),
   schema: z.string().nullish(),
   statement: z.string().nullish(),
-  status: z.enum(['IDLE', 'PENDING', 'SUCCESS', 'ERROR']).default('IDLE'),
+  status: z.enum(["IDLE", "PENDING", "SUCCESS", "ERROR"]).default("IDLE"),
+  executionId: z.string().nullish(),
   result: OracleResultSchema.nullish(),
 });
 

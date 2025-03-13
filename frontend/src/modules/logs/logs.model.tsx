@@ -1,32 +1,30 @@
-import { useState } from "react"
-import { LogsFilters } from "./schemas/logs-filters"
-import { ListLogsServiceContract } from "./api/logs/list-logs.contracts"
-import { useQuery } from "@tanstack/react-query"
-import { Log } from "./schemas/logs"
+import { useState } from "react";
+import { LogsFilters } from "./schemas/logs-filters";
+import { useQuery } from "@tanstack/react-query";
+import { FetchExecutionsService } from "../console/api/execution/execution.service";
+import { ExecutionResponse } from "../console/api/execution/execution.contracts";
 
 const QUERY_KEYS = {
-    LIST_LOGS: 'logs'
-}
+  LIST_LOGS: "logs",
+};
 
 type Props = {
-    service: {
-        listLogs: ListLogsServiceContract
-    }
-}
+  service: {
+    listExecutions: FetchExecutionsService;
+  };
+};
 
 export const useLogsModel = ({ service }: Props) => {
-    const filters = useState<LogsFilters>({
-        flavor: 'ORACLE'
-    })
+  const filters = useState<LogsFilters>({
+    flavor: "ORACLE",
+  });
 
-    const { data: listLogs } =  useQuery<Array<Log>>({
-        queryKey: [QUERY_KEYS.LIST_LOGS],
-        queryFn: () => service.listLogs.exec()
-    })
+  const { data: listLogs } = useQuery<Array<ExecutionResponse>>({
+    queryKey: [QUERY_KEYS.LIST_LOGS],
+    queryFn: () => service.listExecutions.exec(),
+  });
 
-    console.log({listLogs})
-
-    return {
-        logs: listLogs
-    }
-}
+  return {
+    logs: listLogs,
+  };
+};

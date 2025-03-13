@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { HttpClient, HttpRequest } from "./http-client.contracts";
 
-const URL = "http://localhost:8080/api";
+const URL = "http://localhost:8080";
 
 export class AxiosHttpClientAdapter implements HttpClient {
   constructor(private api: AxiosInstance = axios) {}
