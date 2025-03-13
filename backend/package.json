@@ -1,0 +1,21 @@
+{
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"start": "node dist/index.js",
+		"dev": "ts-node --files index.ts"
+	},
+	"dependencies": {
+		"@prisma/client": "6.5.0",
+		"amqplib": "^0.10.5",
+		"fastify": "^5.2.1",
+		"fastify-plugin": "^5.0.1",
+		"mongoose": "^8.12.1",
+		"prisma": "^6.5.0"
+	},
+	"devDependencies": {
+		"@types/amqplib": "^0.10.7",
+		"@types/node": "^22.13.10",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.2"
+	}
+}

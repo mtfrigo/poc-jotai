@@ -1,0 +1,52 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27016:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app_network
+
+  # fastify-api:
+  #   build: .
+  #   container_name: fastify_api
+  #   restart: always
+  #   depends_on:
+  #     - mongo
+  #     - rabbitmq
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     DATABASE_URL: mongodb://root:example@mongo:27016/mydb?authSource=admin
+  #     RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672/
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   networks:
+  #     - app_network
+
+volumes:
+  mongo_data:
+
+networks:
+  app_network:
+    driver: bridge
