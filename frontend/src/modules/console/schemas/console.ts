@@ -28,6 +28,8 @@ export const OracleConsoleSchema = BaseConsoleSchema.extend({
 export const MongoConsoleSchema = BaseConsoleSchema.extend({
   flavor: z.literal(FlavorSchema.Enum.MONGO),
   collection: z.string().nullish(),
+  status: z.enum(["IDLE", "PENDING", "SUCCESS", "ERROR"]).default("IDLE"),
+  executionId: z.string().nullish(),
   find: z.object({
     filter: z.string().nullish(),
     projection: z.string().nullish(),

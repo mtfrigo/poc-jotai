@@ -1,54 +1,59 @@
-import { describe, it, expect} from 'vitest'
-import { useOraclePanelModel } from './oracle-panel.model'
-import { renderWithInjectedAtoms } from '@/test/utils/renderWithInjectedAtoms'
-import { makeConnection } from '@/test/mock/factories/connections.factory'
-import { makePanel, makeTab } from '@/test/mock/factories/panel.factory'
-import { successfulOracleExecutionServiceMock } from '@/test/mock/api/execution/execution.service'
-import { activeConnectionAtom } from '../../console.atoms'
-import { panelsAtom } from '../panel.atoms'
-import { Panel } from '../../schemas/panel'
-import { OracleConsole } from '../../schemas/console'
-import { makeOracleConsole } from '@/test/mock/factories/oracle.factory'
-import { oracleConsolesAtom } from './oracle-panel.atoms'
-import { successfulLogCreateServiceMock } from '@/test/mock/api/logs/logs.service'
+import { describe, it, expect } from "vitest";
+import { useOraclePanelModel } from "./oracle-panel.model";
+import { renderWithInjectedAtoms } from "@/test/utils/renderWithInjectedAtoms";
+import { makeConnection } from "@/test/mock/factories/connections.factory";
+import { makePanel, makeTab } from "@/test/mock/factories/panel.factory";
+import {
+  successfulOracleExecutionServiceMock,
+  successfulFetchExecutionServiceMock,
+} from "@/test/mock/api/execution/execution.service";
+import { activeConnectionAtom } from "../../console.atoms";
+import { panelsAtom } from "../panel.atoms";
+import { Panel } from "../../schemas/panel";
+import { OracleConsole } from "../../schemas/console";
+import { makeOracleConsole } from "@/test/mock/factories/oracle.factory";
+import { oracleConsolesAtom } from "./oracle-panel.atoms";
 
-describe('<OraclePanelModel />', () => {
-    const initialConnection = makeConnection({
-        flavor: 'ORACLE'
-    })
+describe("<OraclePanelModel />", () => {
+  const initialConnection = makeConnection({
+    flavor: "ORACLE",
+  });
 
-    const tabs = [makeTab(), makeTab()];
-    const activeTab = tabs[0].id
-    const initialPanel = makePanel({ tabs, activeTab })
+  const tabs = [makeTab(), makeTab()];
+  const activeTab = tabs[0].id;
+  const initialPanel = makePanel({ tabs, activeTab });
 
-    const initialPanels: Record<string, Panel> = {
-        [initialConnection.id]: {
-            ...initialPanel
-        }
-    }
+  const initialPanels: Record<string, Panel> = {
+    [initialConnection.id]: {
+      ...initialPanel,
+    },
+  };
 
-    const initialConsole = makeOracleConsole();
+  const initialConsole = makeOracleConsole();
 
-    const initialConsoles: Record<string, OracleConsole> = {
-        [activeTab]: {
-            ...initialConsole
-        }
-    }
+  const initialConsoles: Record<string, OracleConsole> = {
+    [activeTab]: {
+      ...initialConsole,
+    },
+  };
 
-    it('should have initial values on panel', () => {
-        const { result } = renderWithInjectedAtoms(() => useOraclePanelModel({
-            consoleId: activeTab,
+  it("should have initial values on panel", () => {
+    const { result } = renderWithInjectedAtoms(
+      () =>
+        useOraclePanelModel({
+          consoleId: activeTab,
+          services: {
             executionService: successfulOracleExecutionServiceMock,
-            createLogService: successfulLogCreateServiceMock
-        }), [
-            [activeConnectionAtom, initialConnection],
-            [panelsAtom, initialPanels],
-            [oracleConsolesAtom, initialConsoles]
-        ])
+            fetchExecutionService: successfulFetchExecutionServiceMock,
+          },
+        }),
+      [
+        [activeConnectionAtom, initialConnection],
+        [panelsAtom, initialPanels],
+        [oracleConsolesAtom, initialConsoles],
+      ]
+    );
 
-
-        expect(result.current.statement).toBe(initialConsole.statement)
-    })
-
-
-})
+    expect(result.current.statement).toBe(initialConsole.statement);
+  });
+});

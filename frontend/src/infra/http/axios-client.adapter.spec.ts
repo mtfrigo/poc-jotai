@@ -39,7 +39,7 @@ describe("AxiosHttpClientAdapter", () => {
       method: HttpMethod.GET,
       headers: undefined,
       data: undefined,
-      url: "http://localhost:8080/api/test",
+      url: "http://localhost:8080/test",
     });
   });
 
@@ -63,7 +63,7 @@ describe("AxiosHttpClientAdapter", () => {
       method: HttpMethod.POST,
       headers: { "Content-Type": "application/json" },
       data: { key: "value" },
-      url: "http://localhost:8080/api/submit",
+      url: "http://localhost:8080/submit",
     });
   });
 
@@ -93,7 +93,7 @@ describe("AxiosHttpClientAdapter", () => {
       method: HttpMethod.GET,
       headers: undefined,
       data: undefined,
-      url: "http://localhost:8080/api/error",
+      url: "http://localhost:8080/error",
     });
   });
 
@@ -114,7 +114,7 @@ describe("AxiosHttpClientAdapter", () => {
       method: HttpMethod.GET,
       headers: undefined,
       data: undefined,
-      url: "http://localhost:8080/api/network-error",
+      url: "http://localhost:8080/network-error",
     });
   });
 
@@ -136,7 +136,7 @@ describe("AxiosHttpClientAdapter", () => {
       method: HttpMethod.DELETE,
       headers: undefined,
       data: undefined,
-      url: "http://localhost:8080/api/no-header-no-body",
+      url: "http://localhost:8080/no-header-no-body",
     });
   });
 });

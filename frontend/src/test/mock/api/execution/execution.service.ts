@@ -1,12 +1,39 @@
-
-import { OracleExecuteBody, OracleExecuteServiceContract } from "@/modules/console/api/execution/execution.contracts";
+import {
+  OracleExecuteBody,
+  OracleExecuteServiceContract,
+  FetchExecutionServiceContract,
+} from "@/modules/console/api/execution/execution.contracts";
+import { generateUUID } from "@/shared/libs/uuid";
 import { faker } from "@faker-js/faker";
 
-export const successfulOracleExecutionServiceMock: OracleExecuteServiceContract = {
-  exec: () => Promise.resolve({ headers: [], rows: [] })
-}
+export const successfulOracleExecutionServiceMock: OracleExecuteServiceContract =
+  {
+    exec: () =>
+      Promise.resolve({
+        createdAt: new Date(),
+        flavor: "ORACLE",
+        id: generateUUID(),
+        resourceId: "X",
+        status: "PENDING",
+      }),
+  };
 
-export class InMemoryOracleExecuteService implements OracleExecuteServiceContract {
+export const successfulFetchExecutionServiceMock: FetchExecutionServiceContract =
+  {
+    exec: () =>
+      Promise.resolve({
+        createdAt: new Date(),
+        flavor: "MONGO",
+        id: generateUUID(),
+        resourceId: "X",
+        status: "SUCCESS",
+        finishedAt: new Date(),
+      }),
+  };
+
+export class InMemoryOracleExecuteService
+  implements OracleExecuteServiceContract
+{
   async exec(body: OracleExecuteBody) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

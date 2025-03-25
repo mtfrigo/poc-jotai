@@ -3,15 +3,13 @@ import { atom } from "jotai";
 import { activeConnectionAtom } from "../../console.atoms";
 import { atomWithStorage } from "jotai/utils";
 
-
-export const oracleConsolesAtom = atomWithStorage<Record<string, OracleConsole>>(
-  '@oracle-consoles',
-  {}
-);
+export const oracleConsolesAtom = atomWithStorage<
+  Record<string, OracleConsole>
+>("@oracle-consoles", {});
 oracleConsolesAtom.debugLabel = "oracleConsolesAtom";
 
 export const consoleIdAtom = atom<string | null>(null);
-consoleIdAtom.debugLabel = "consoleIdAtom";
+consoleIdAtom.debugLabel = "oracleConsoleIdAtom";
 
 export const oracleConsoleAtom = atom(
   (get) => {
@@ -24,21 +22,19 @@ export const oracleConsoleAtom = atom(
       flavor: "ORACLE",
       statement: "",
       schema: null,
-      status: 'IDLE'
-    } as OracleConsole
+      status: "IDLE",
+    } as OracleConsole;
 
     if (!connection || !consoleId) return initialConsole;
 
     const oracleConsole = oracleConsoles[consoleId];
 
-    return (
-      oracleConsole ?? initialConsole
-    );
+    return oracleConsole ?? initialConsole;
   },
   (get, set, value: OracleConsole) => {
     const consoleId = get(consoleIdAtom);
 
-    if(!consoleId) return;
+    if (!consoleId) return;
 
     set(oracleConsolesAtom, (prev) => ({
       ...prev,

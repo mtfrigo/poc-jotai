@@ -6,7 +6,7 @@ export const ExecutionResponseSchema = z.object({
   flavor: FlavorSchema,
   status: z.enum(["PENDING", "SUCCESS", "ERROR"]),
   createdAt: z.coerce.date(),
-  finishedAt: z.coerce.date(),
+  finishedAt: z.coerce.date().optional(),
   id: z.string(),
 });
 
@@ -29,6 +29,7 @@ export const OracleExecuteBodySchema = z.object({
 });
 
 export const MongoExecuteBodySchema = z.object({
+  connectionId: z.string(),
   find: z.object({
     filter: z.string().optional(),
     projection: z.string().optional(),
