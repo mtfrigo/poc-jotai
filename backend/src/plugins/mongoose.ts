@@ -3,7 +3,7 @@ import fp from "fastify-plugin";
 import mongoose from "mongoose";
 
 export default fp(async function (fastify, opts) {
-  const mongoUri = process.env.DATABASE_URL!;
+  const mongoUri = "mongodb://root:example@localhost:27016/mydb?authSource=admin";
 
   try {
     const db = await mongoose.connect(mongoUri, {

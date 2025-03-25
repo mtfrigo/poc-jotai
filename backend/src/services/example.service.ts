@@ -1,9 +1,6 @@
 import { Execution } from "../models/execution.model";
-import { prisma } from "../plugins/prisma";
 
-export async function getExecutions() {
-  return await prisma.execution.findMany(); // Fetch all books
-}
+
 export async function addExecution(data: any) {
   const execution = new Execution({
     resourceId: data.resourceId,

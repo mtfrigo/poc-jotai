@@ -41,7 +41,7 @@ async function rabbitPlugin(
   let channel: Channel;
 
   try {
-    connection = await amqp.connect(process.env.RABBITMQ_URI!);
+    connection = await amqp.connect("amqp://guest:guest@localhost:5672");
     channel = await connection.createChannel();
 
     await channel.assertQueue(queueName, { durable: false }).then(() => {
