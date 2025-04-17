@@ -4,6 +4,7 @@ import {
   addExecution,
   fetchExecutionById,
   fetchAllExecutions,
+  fetchExecutionContentById,
 } from "../services/example.service";
 
 export async function executeOracle(req: FastifyRequest, reply: FastifyReply) {
@@ -30,6 +31,14 @@ export async function fetchExecution(req: FastifyRequest, reply: FastifyReply) {
   const execution = await fetchExecutionById(id);
 
   return reply.send(execution);
+}
+
+export async function fetchExecutionContent(req: FastifyRequest, reply: FastifyReply) {
+  const { id } = req.params as { id: string };
+
+  const content = await fetchExecutionContentById(id);
+
+  return reply.send(content);
 }
 
 export async function fetchExecutions(

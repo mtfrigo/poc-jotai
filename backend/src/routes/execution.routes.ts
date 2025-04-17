@@ -3,6 +3,7 @@ import {
   executeOracle,
   fetchExecution,
   fetchExecutions,
+  fetchExecutionContent,
 } from "../controllers/execution.controller";
 import { executeOracleBodySchema } from "../schemas/oracle-execute-body";
 
@@ -14,5 +15,6 @@ export default async function executionRoutes(fastify: FastifyInstance) {
   );
 
   fastify.get("/:id", fetchExecution);
+  fastify.get("/content/:id", fetchExecutionContent);
   fastify.get("/", fetchExecutions);
 }

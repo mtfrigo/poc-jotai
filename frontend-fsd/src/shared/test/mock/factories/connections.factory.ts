@@ -1,4 +1,4 @@
-import { Connection } from "@/modules/console/schemas/connection";
+import { Connection } from "@/entities/connections/model/connection.schema";
 import { faker } from "@faker-js/faker";
 
 export function makeConnection(props: Partial<Connection>): Connection

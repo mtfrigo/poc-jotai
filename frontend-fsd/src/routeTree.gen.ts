@@ -12,7 +12,9 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LogsImport } from './routes/logs'
+import { Route as ConsoleImport } from './routes/console'
 import { Route as IndexImport } from './routes/index'
+import { Route as ConsoleOracleImport } from './routes/console.oracle'
 
 // Create/Update Routes
 
@@ -22,10 +24,22 @@ const LogsRoute = LogsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ConsoleRoute = ConsoleImport.update({
+  id: '/console',
+  path: '/console',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const ConsoleOracleRoute = ConsoleOracleImport.update({
+  id: '/oracle',
+  path: '/oracle',
+  getParentRoute: () => ConsoleRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -39,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/console': {
+      id: '/console'
+      path: '/console'
+      fullPath: '/console'
+      preLoaderRoute: typeof ConsoleImport
+      parentRoute: typeof rootRoute
+    }
     '/logs': {
       id: '/logs'
       path: '/logs'
@@ -46,43 +67,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogsImport
       parentRoute: typeof rootRoute
     }
+    '/console/oracle': {
+      id: '/console/oracle'
+      path: '/oracle'
+      fullPath: '/console/oracle'
+      preLoaderRoute: typeof ConsoleOracleImport
+      parentRoute: typeof ConsoleImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ConsoleRouteChildren {
+  ConsoleOracleRoute: typeof ConsoleOracleRoute
+}
+
+const ConsoleRouteChildren: ConsoleRouteChildren = {
+  ConsoleOracleRoute: ConsoleOracleRoute,
+}
+
+const ConsoleRouteWithChildren =
+  ConsoleRoute._addFileChildren(ConsoleRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteWithChildren
   '/logs': typeof LogsRoute
+  '/console/oracle': typeof ConsoleOracleRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteWithChildren
   '/logs': typeof LogsRoute
+  '/console/oracle': typeof ConsoleOracleRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteWithChildren
   '/logs': typeof LogsRoute
+  '/console/oracle': typeof ConsoleOracleRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/logs'
+  fullPaths: '/' | '/console' | '/logs' | '/console/oracle'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/logs'
-  id: '__root__' | '/' | '/logs'
+  to: '/' | '/console' | '/logs' | '/console/oracle'
+  id: '__root__' | '/' | '/console' | '/logs' | '/console/oracle'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConsoleRoute: typeof ConsoleRouteWithChildren
   LogsRoute: typeof LogsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConsoleRoute: ConsoleRouteWithChildren,
   LogsRoute: LogsRoute,
 }
 
@@ -97,14 +144,25 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/console",
         "/logs"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/console": {
+      "filePath": "console.tsx",
+      "children": [
+        "/console/oracle"
+      ]
+    },
     "/logs": {
       "filePath": "logs.tsx"
+    },
+    "/console/oracle": {
+      "filePath": "console.oracle.tsx",
+      "parent": "/console"
     }
   }
 }

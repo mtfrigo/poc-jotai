@@ -17,7 +17,7 @@ export function NavigationMenuDemo() {
       <NavigationMenu className='absolute top-2 left-1/2 transform -translate-x-1/2 '>
         <NavigationMenuList>
           <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            <Link to="/"  >
+            <Link to="/console"  >
                 Console
             </Link>
           </NavigationMenuItem>

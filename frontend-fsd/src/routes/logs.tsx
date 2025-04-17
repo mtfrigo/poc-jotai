@@ -1,4 +1,4 @@
-import { LogsPageView } from '@/pages/logs.page'
+import { LogsPageView } from '@/pages/logs/ui/logs.page'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/logs')({

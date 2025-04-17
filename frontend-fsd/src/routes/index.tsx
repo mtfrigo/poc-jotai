@@ -1,4 +1,3 @@
-import { ConsolePage as Page } from '@/pages/console/ui/console.page'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -9,5 +8,5 @@ export const Route = createFileRoute('/')({
 })
 
 function ConsolePage() {
-  return <Page />
+  return <div>HOME</div>
 }

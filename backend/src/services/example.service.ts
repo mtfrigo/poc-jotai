@@ -12,8 +12,8 @@ export async function addExecution(data: any) {
 }
 
 export async function updateStatusFromQueue(id: string) {
-  const max = 8;
-  const min = 3;
+  const max = 5;
+  const min = 2;
 
   const waitForMs = Math.floor(Math.random() * (max - min + 1) + min) * 1000;
 
@@ -36,6 +36,25 @@ export async function fetchExecutionById(id: string) {
   const execution = Execution.findOne({ _id: id });
 
   return execution;
+}
+
+export async function fetchExecutionContentById(id: string) {
+  const execution = Execution.findOne({ _id: id });
+
+  return {
+    headers: ['id'],
+    rows: [
+      {
+        id: 3,
+      },
+      {
+        id: 4,
+      },
+      {
+        id: 5,
+      }
+    ]
+  }
 }
 
 export async function fetchAllExecutions() {
