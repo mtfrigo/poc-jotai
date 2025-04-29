@@ -31,6 +31,9 @@ export const fetchByIdQuery = ({ executionId }: Props) =>
         const res = await OracleService.fetchContent({
           executionId: executionId ?? "",
         });
+
+        await new Promise((resolve) => {setTimeout(resolve, 5000)})
+
         return res.data;
       },
       enabled: !!executionId,

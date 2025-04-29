@@ -8,11 +8,23 @@ import {
   TableRow,
 } from "@/shared/ui/primitives/table";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export const Result = ({ executionId }: { executionId: string }) => {
-  const { data: content } = useQuery(
+  const { data: content, isFetched } = useQuery(
     OracleQueries.fetchContentQuery({ executionId })
   );
+
+  
+  const isLoading = useMemo(() => {
+    if(isFetched) {
+      return false;
+    }
+
+    if(!isFetched && executionId) return true;
+
+  }, [executionId, isFetched])
+
 
   return (
     <Table className="h-full ">
@@ -24,7 +36,14 @@ export const Result = ({ executionId }: { executionId: string }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {content?.rows.map((row, i) => {
+        {
+          isLoading && (
+            <TableRow  className="h-10">
+                <TableCell colSpan={content?.headers.length} className="text-center" >Baixando resultado..</TableCell>
+            </TableRow>
+          )
+        }
+        {!isLoading && content?.rows.map((row, i) => {
           return (
             <TableRow>
               {content?.headers.map((header, j) => (

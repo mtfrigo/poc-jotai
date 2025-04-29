@@ -1,5 +1,5 @@
 import { useActiveConnection } from "@/entities/connections";
-import { useConsoleById } from "@/entities/oracle";
+import { usePanelById } from "@/entities/oracle";
 import { useUpdateConsole } from "@/features/oracle";
 import { useExecuteWithPolling } from "@/features/oracle";
 import { Console } from "@/shared/ui/components/console";
@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/primitives/button";
 import { Textarea } from "@/shared/ui/primitives/textarea";
 import { formatDatetime } from "@/shared/utils/format-datetime";
 import { getDuration } from "@/shared/utils/get-duration-from-start-end";
+import {  usePanelStateById} from "@/entities/panels";
 import {
   CalendarIcon,
   ChevronLeft,
@@ -22,33 +23,31 @@ import {
 import { Result } from "./result";
 
 type Props = {
-  consoleId: string;
+  panelId: string;
 };
 
-export const OracleConsole = ({ consoleId }: Props) => {
+export const OraclePanel = ({ panelId }: Props) => {
   const connection = useActiveConnection();
-  const { onUpdateConsole } = useUpdateConsole(consoleId);
+  const { onUpdateConsole } = useUpdateConsole(panelId);
+  const [isLoading ] = usePanelStateById(panelId)
 
   const {
-    console: oracleConsole,
-    canExecute,
-    canRefresh,
-  } = useConsoleById(consoleId);
+    panel: oraclePanel,
+  } = usePanelById(panelId);
 
-  const { execution, handleExecute } = useExecuteWithPolling({ consoleId });
+  const { execution, handleExecute } = useExecuteWithPolling({ consoleId: panelId });
 
   const handleRefresh = () => {
     // TODO será que não faria mais sentido ter um endpoint no backend para reexecutar a partir de um executionId?
     // TODO o statement aqui na verdade teria que ver do "execution" não do console...
-    if (oracleConsole?.statement) {
-      handleExecute({ statement: oracleConsole.statement });
+    if (oraclePanel?.statement) {
+      handleExecute({ statement: oraclePanel.statement });
     }
   };
 
   const handleCloseExecution = () => {
     onUpdateConsole({
-      statement: oracleConsole?.statement ?? "",
-      status: "IDLE",
+      statement: oraclePanel?.statement ?? "",
       executionId: undefined,
     });
   };
@@ -66,21 +65,22 @@ export const OracleConsole = ({ consoleId }: Props) => {
               <Button
                 variant="default"
                 size="sm"
-                disabled={!canExecute}
+                disabled={isLoading}
+                // disabled={!canExecute}
                 onClick={() =>
-                  handleExecute({ statement: oracleConsole?.statement ?? "" })
+                  handleExecute({ statement: oraclePanel?.statement ?? "" })
                 }
               >
                 Run <PlayCircleIcon />
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" disabled={!isLoading}>
                 Cancel <StopCircleIcon />
               </Button>
             </div>
             <div>
               <Button
                 onClick={() =>
-                  onUpdateConsole({ statement: oracleConsole?.statement ?? "" })
+                  onUpdateConsole({ statement: oraclePanel?.statement ?? "" })
                 }
                 variant="outline"
                 size="sm"
@@ -93,7 +93,7 @@ export const OracleConsole = ({ consoleId }: Props) => {
         <Console.Body>
           <Textarea
             className="flex-1"
-            defaultValue={oracleConsole?.statement ?? ""}
+            defaultValue={oraclePanel?.statement ?? ""}
             onBlur={(e) => {
               onUpdateConsole({ statement: e.target.value });
             }}
@@ -113,7 +113,7 @@ export const OracleConsole = ({ consoleId }: Props) => {
               <Button
                 variant="outline"
                 size="sm"
-                disabled={!canRefresh}
+                disabled={!isLoading && !!oraclePanel.executionId}
                 onClick={handleRefresh}
               >
                 <RefreshCwIcon />
@@ -133,18 +133,18 @@ export const OracleConsole = ({ consoleId }: Props) => {
             </div>
           </div>
         </Console.Toolbar>
-        {oracleConsole.status === "IDLE" && (
+        {!oraclePanel.executionId && !isLoading && (
           <div className="flex flex-1 justify-center items-center">
             No execution
           </div>
         )}
-        {oracleConsole.status === "PENDING" && (
+        {isLoading  && (
           <div className="flex flex-1 justify-center items-center">
             Carregando...
           </div>
         )}
-        {oracleConsole.status === "SUCCESS" && oracleConsole.executionId && (
-          <Result executionId={oracleConsole.executionId} />
+        {oraclePanel.executionId && !isLoading && (
+          <Result executionId={oraclePanel.executionId} />
         )}
       </Console.Result>
       <Console.Footer>

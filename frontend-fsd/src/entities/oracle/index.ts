@@ -1,5 +1,5 @@
 
 
-export { useConsoleById, oracleConsolesAtom  } from './model/console.atom'
-export {OracleConsoleSchema, type OracleConsole} from './model/console.schema'
+export { usePanelById, oraclePanelsAtom  } from './model/panel.atom'
+export {OraclePanelSchema, type OraclePanel} from './model/panel.schema'
 export {OracleExecuteBodySchema, type OracleExecuteBody} from './model/execution.schema'

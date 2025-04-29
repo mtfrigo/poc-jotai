@@ -3,17 +3,15 @@ import { useActiveConnection } from "@/entities/connections";
 import { Button } from "@/shared/ui/primitives/button";
 import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { cn } from "@/shared/libs/tailwind-merge/utils";
-import { OracleConsole } from "./console";
-import { usePanelById } from "@/entities/consoles";
-import { useSelectPanelTab } from "@/features/oracle";
-import { useNewConsole } from "@/features/oracle";
-import { useResetConsoles } from "@/features/oracle";
-
+import { OraclePanel } from "./console";
+import { usePanelById, useActiveConnectionPanelById} from "@/entities/panels";
+import { useSelectPanelTab, useNewConsole, useResetConsoles} from "@/features/oracle";
 
 export const OracleConsolePage = () => {
     const connection = useActiveConnection()
 
     const [panel] = usePanelById(connection?.id)
+    const [activePanel] = useActiveConnectionPanelById(connection?.id)
 
     const { handleSelectTab } = useSelectPanelTab(connection?.id)
     const { handleAddConsole } = useNewConsole(connection?.id)
@@ -37,13 +35,13 @@ export const OracleConsolePage = () => {
             >
               <PlusCircleIcon />
             </Button>
-            {panel?.tabs.map((tab) => (
+            {panel?.map((tab) => (
               <Button
                 key={tab.id}
                 size="sm"
                 data-testid="panel-tab-trigger"
                 className={cn({
-                  "bg-green-500 hover:bg-green-200": tab.id === panel.activeTab,
+                  "bg-green-500 hover:bg-green-200": tab.id === activePanel,
                 })}
                 variant="outline"
                 onClick={() => handleSelectTab(tab.id)}
@@ -61,12 +59,12 @@ export const OracleConsolePage = () => {
             </Button>
           </div>
           <div className="flex flex-1 overflow-hidden">
-            {!panel?.activeTab && (
+            {!activePanel && (
               <div className="flex flex-1 items-center justify-center">
                 No Console selected
               </div>
             )}
-            {panel?.activeTab && <OracleConsole consoleId={panel.activeTab} />}
+            {activePanel && <OraclePanel panelId={activePanel} />}
           </div>
         </div>
       )}

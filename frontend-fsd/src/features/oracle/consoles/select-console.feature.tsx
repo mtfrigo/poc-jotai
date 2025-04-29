@@ -1,13 +1,11 @@
-import { usePanelById } from "@/entities/consoles/model/consoles.atoms";
+import { useActiveConnectionPanelById } from "@/entities/panels/model/panels.atoms";
 
 
 export const useSelectPanelTab = (panelId?: string) => {
-    const [panel, setPanel] = usePanelById(panelId)
+    const [activePanel, setActivePanel] = useActiveConnectionPanelById(panelId)
 
     const handleSelectTab = (tabId: string) => {
-        if (!panel) return;
-    
-        setPanel({ ...panel, activeTab: tabId });
+        setActivePanel(tabId);
     };
 
     return { handleSelectTab }
