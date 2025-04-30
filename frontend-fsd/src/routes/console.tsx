@@ -9,5 +9,4 @@ export const Route = createFileRoute('/console')({
   notFoundComponent: () => {
     return (<div>Console not implemented</div>)
   },
-  
 })

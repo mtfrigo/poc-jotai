@@ -10,7 +10,7 @@ connectionPanels.debugLabel = "connectionPanels";
 export const activeConnectionPanel = atomWithStorage<Record<string, string | null >>('@active-connection-panel', {})
 activeConnectionPanel.debugLabel = "activeConnectionPanel";
 
-export const panelState = atomWithStorage<Record<string, boolean >>('@panel-state', {})
+export const panelState = atomWithStorage<Record<string, { isLoading: boolean, loadingMessage: string} >>('@panel-state', {})
 panelState.debugLabel = "panelState";
 
 export const panelByIdAtom = (id?: string) => atom(
@@ -56,17 +56,20 @@ export const useActiveConnectionPanelById = (id?: string) => useAtom(useMemo(() 
 
 export const panelStateByIdAtom = (id?: string) => atom(
   (get) => {
-    const state = false
+    const state = {
+      loadingMessage: '',
+      isLoading: false
+    }
 
     if(!id) return state;
 
     return get(panelState)[id] ?? state
   },
-  (_, set, value: boolean) => {
+  (_, set, value: { isLoading: boolean, loadingMessage: string}) => {
     if(id) {
         set(panelState, (prev) => ({
           ...prev,
-          [id]: value,
+          [id]: {...value},
         }));
     }
   }

@@ -7,7 +7,6 @@ import { Button } from "@/shared/ui/primitives/button";
 import { Textarea } from "@/shared/ui/primitives/textarea";
 import { formatDatetime } from "@/shared/utils/format-datetime";
 import { getDuration } from "@/shared/utils/get-duration-from-start-end";
-import {  usePanelStateById} from "@/entities/panels";
 import {
   CalendarIcon,
   ChevronLeft,
@@ -29,13 +28,12 @@ type Props = {
 export const OraclePanel = ({ panelId }: Props) => {
   const connection = useActiveConnection();
   const { onUpdateConsole } = useUpdateConsole(panelId);
-  const [isLoading ] = usePanelStateById(panelId)
 
   const {
     panel: oraclePanel,
   } = usePanelById(panelId);
 
-  const { execution, handleExecute } = useExecuteWithPolling({ consoleId: panelId });
+  const { execution, handleExecute,  data, isLoading, loadingMessage } = useExecuteWithPolling({ consoleId: panelId });
 
   const handleRefresh = () => {
     // TODO será que não faria mais sentido ter um endpoint no backend para reexecutar a partir de um executionId?
@@ -133,19 +131,12 @@ export const OraclePanel = ({ panelId }: Props) => {
             </div>
           </div>
         </Console.Toolbar>
-        {!oraclePanel.executionId && !isLoading && (
-          <div className="flex flex-1 justify-center items-center">
-            No execution
-          </div>
-        )}
-        {isLoading  && (
-          <div className="flex flex-1 justify-center items-center">
-            Carregando...
-          </div>
-        )}
-        {oraclePanel.executionId && !isLoading && (
-          <Result executionId={oraclePanel.executionId} />
-        )}
+          <Result 
+            loadingMessage={loadingMessage}
+            executionId={oraclePanel.executionId}
+            data={data}  
+            isLoading={isLoading} 
+          />
       </Console.Result>
       <Console.Footer>
         <div className="flex gap-2">

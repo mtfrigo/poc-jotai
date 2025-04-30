@@ -1,7 +1,6 @@
 import { usePanelById, OracleExecuteBody, OracleExecuteBodySchema } from "@/entities/oracle";
 import { useExecuteOracle } from "./execute.mutation";
 import { useUpdateConsole } from "../../consoles";
-import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { OracleQueries } from "@/entities/oracle/api/oracle.queries";
 import { usePanelStateById } from "@/entities/panels";
@@ -13,19 +12,24 @@ type Props = {
 
 export const useExecuteWithPolling = ({ consoleId }: Props) => {
   const { panel: oracleConsole} = usePanelById(consoleId)
-  const [ isLoading, setIsLoading ] = usePanelStateById(consoleId)
+  const [ panelState, setPanelState ] = usePanelStateById(consoleId)
   const { onUpdateConsole } = useUpdateConsole(consoleId)
   const { execute } = useExecuteOracle()
 
   const handleExecute = (params: OracleExecuteBody) => {
     const validatedParams = OracleExecuteBodySchema.parse(params);
     
+    
+    setPanelState({
+      isLoading: true,
+      loadingMessage: 'Executando...'
+    })
+    
     onUpdateConsole({
       statement: validatedParams.statement,
       executionId: undefined
     });
 
-    setIsLoading(true)
 
     execute({
         resourceId: "",
@@ -35,25 +39,55 @@ export const useExecuteWithPolling = ({ consoleId }: Props) => {
         onUpdateConsole({
           executionId: data.id as string,
         })
-        toast.loading("Executando...", { id: data.id})
+        setPanelState({
+          isLoading: true,
+          loadingMessage: 'Iniciando polling...'
+        })
       }
     })
   }
 
-   const { data: execution } = useQuery(OracleQueries.fetchByIdQuery({ executionId: oracleConsole?.executionId, enabled: false}))
+  const { data: execution, } = useQuery(OracleQueries.fetchByIdQuery({ executionId: oracleConsole?.executionId, enabled: false}))
   
+  const { data: content, isFetched: isContentFetched } = useQuery(
+    OracleQueries.fetchContentQuery({ 
+      executionId: execution?.id, 
+      enabled: !!execution?.id && execution?.status === "SUCCESS" 
+    })
+  );
+
+
     useEffect(() => {
-      if (
-        execution?.id === oracleConsole.executionId && 
-        execution?.status === "SUCCESS" && isLoading
-      ) {
-        setIsLoading(false)
+      if(execution?.status === 'PENDING') {
+        setPanelState({
+          isLoading: true,
+          loadingMessage: 'Polling...'
+        })
+      } else if(execution?.status === "SUCCESS" && !isContentFetched)  {
+        setPanelState({
+          isLoading: true,
+          loadingMessage: 'Baixando resultado...'
+        })
+      } else if(execution?.status === "SUCCESS" && isContentFetched) {
+        setPanelState({
+          isLoading: false,
+          loadingMessage: ''
+        })
+      } else if(execution?.status === "ERROR") {
+        setPanelState({
+          isLoading: false,
+          loadingMessage: ''
+        })
       }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [execution, oracleConsole]);
+    }, [execution, content, isContentFetched, oracleConsole]);
 
     return {
         handleExecute,
-        execution
+        data: content,
+        isLoading: panelState.isLoading,
+        execution,
+        loadingMessage: panelState.loadingMessage,
     }
 }

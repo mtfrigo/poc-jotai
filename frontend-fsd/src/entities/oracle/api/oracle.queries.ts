@@ -24,7 +24,7 @@ export const fetchByIdQuery = ({ executionId }: Props) =>
     staleTime: Infinity,
   });
 
-  export const fetchContentQuery = ({ executionId }: Props) =>
+  export const fetchContentQuery = ({ executionId, enabled }: Props) =>
     queryOptions({
       queryKey: ["oracle", "execution", "content", executionId],
       queryFn: async () => {
@@ -32,11 +32,11 @@ export const fetchByIdQuery = ({ executionId }: Props) =>
           executionId: executionId ?? "",
         });
 
-        await new Promise((resolve) => {setTimeout(resolve, 5000)})
+        await new Promise((resolve) => {setTimeout(resolve, 1000)})
 
         return res.data;
       },
-      enabled: !!executionId,
+      enabled,
       staleTime: Infinity,
     });
 

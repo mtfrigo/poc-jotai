@@ -1,4 +1,4 @@
-import { OracleQueries } from "@/entities/oracle/api/oracle.queries";
+import { OracleResultContent } from "@/entities/oracle/model/execution.schema";
 import {
   Table,
   TableBody,
@@ -7,52 +7,64 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/primitives/table";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 
-export const Result = ({ executionId }: { executionId: string }) => {
-  const { data: content, isFetched } = useQuery(
-    OracleQueries.fetchContentQuery({ executionId })
-  );
+type Props = {
+  data?: OracleResultContent,
+  isLoading: boolean,
+  executionId?: string | null,
+  loadingMessage?: string
+}
 
-  
-  const isLoading = useMemo(() => {
-    if(isFetched) {
-      return false;
-    }
-
-    if(!isFetched && executionId) return true;
-
-  }, [executionId, isFetched])
-
+export const Result = ({ data, isLoading, executionId,  loadingMessage = 'Carregando...' }: Props) => {
 
   return (
-    <Table className="h-full ">
-      <TableHeader>
-        <TableRow>
-          {content?.headers.map((header, i) => (
-            <TableHead key={`${header}${i}`}>{header}</TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {
-          isLoading && (
-            <TableRow  className="h-10">
-                <TableCell colSpan={content?.headers.length} className="text-center" >Baixando resultado..</TableCell>
-            </TableRow>
-          )
-        }
-        {!isLoading && content?.rows.map((row, i) => {
-          return (
+    <>
+    {
+      !executionId && !isLoading && (
+        <div className="flex flex-1 justify-center items-center">
+            No execution
+        </div>
+      )
+    }
+    {
+      !executionId && isLoading && (
+        <div className="flex flex-1 justify-center items-center">
+            {loadingMessage}
+        </div>
+      )
+    }
+    {
+      executionId && (
+        <Table className="h-full ">
+          <TableHeader>
             <TableRow>
-              {content?.headers.map((header, j) => (
-                <TableCell key={`${i}-${j}-${header}`}>{row[header]}</TableCell>
+              {data?.headers.map((header, i) => (
+                <TableHead key={`${header}${i}`}>{header}</TableHead>
               ))}
             </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody>
+            {
+              isLoading && (
+                <TableRow  className="h-10">
+                    <TableCell colSpan={data?.headers.length} className="text-center h-24" >{loadingMessage}</TableCell>
+                </TableRow>
+              )
+            }
+            {!isLoading && data?.rows.map((row, i) => {
+              return (
+                <TableRow>
+                  {data?.headers.map((header, j) => (
+                    <TableCell key={`${i}-${j}-${header}`}>{row[header]}</TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      )
+    }
+    </>
+
   );
 };
