@@ -14,6 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LogsImport } from './routes/logs'
 import { Route as ConsoleImport } from './routes/console'
 import { Route as IndexImport } from './routes/index'
+import { Route as TeamsIndexImport } from './routes/teams/index'
+import { Route as TeamsTeamIdImport } from './routes/teams/$teamId'
 import { Route as ConsoleOracleImport } from './routes/console.oracle'
 
 // Create/Update Routes
@@ -33,6 +35,18 @@ const ConsoleRoute = ConsoleImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TeamsIndexRoute = TeamsIndexImport.update({
+  id: '/teams/',
+  path: '/teams/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TeamsTeamIdRoute = TeamsTeamIdImport.update({
+  id: '/teams/$teamId',
+  path: '/teams/$teamId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,6 +88,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsoleOracleImport
       parentRoute: typeof ConsoleImport
     }
+    '/teams/$teamId': {
+      id: '/teams/$teamId'
+      path: '/teams/$teamId'
+      fullPath: '/teams/$teamId'
+      preLoaderRoute: typeof TeamsTeamIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/teams/': {
+      id: '/teams/'
+      path: '/teams'
+      fullPath: '/teams'
+      preLoaderRoute: typeof TeamsIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -95,6 +123,8 @@ export interface FileRoutesByFullPath {
   '/console': typeof ConsoleRouteWithChildren
   '/logs': typeof LogsRoute
   '/console/oracle': typeof ConsoleOracleRoute
+  '/teams/$teamId': typeof TeamsTeamIdRoute
+  '/teams': typeof TeamsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -102,6 +132,8 @@ export interface FileRoutesByTo {
   '/console': typeof ConsoleRouteWithChildren
   '/logs': typeof LogsRoute
   '/console/oracle': typeof ConsoleOracleRoute
+  '/teams/$teamId': typeof TeamsTeamIdRoute
+  '/teams': typeof TeamsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -110,14 +142,35 @@ export interface FileRoutesById {
   '/console': typeof ConsoleRouteWithChildren
   '/logs': typeof LogsRoute
   '/console/oracle': typeof ConsoleOracleRoute
+  '/teams/$teamId': typeof TeamsTeamIdRoute
+  '/teams/': typeof TeamsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/console' | '/logs' | '/console/oracle'
+  fullPaths:
+    | '/'
+    | '/console'
+    | '/logs'
+    | '/console/oracle'
+    | '/teams/$teamId'
+    | '/teams'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/console' | '/logs' | '/console/oracle'
-  id: '__root__' | '/' | '/console' | '/logs' | '/console/oracle'
+  to:
+    | '/'
+    | '/console'
+    | '/logs'
+    | '/console/oracle'
+    | '/teams/$teamId'
+    | '/teams'
+  id:
+    | '__root__'
+    | '/'
+    | '/console'
+    | '/logs'
+    | '/console/oracle'
+    | '/teams/$teamId'
+    | '/teams/'
   fileRoutesById: FileRoutesById
 }
 
@@ -125,12 +178,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConsoleRoute: typeof ConsoleRouteWithChildren
   LogsRoute: typeof LogsRoute
+  TeamsTeamIdRoute: typeof TeamsTeamIdRoute
+  TeamsIndexRoute: typeof TeamsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConsoleRoute: ConsoleRouteWithChildren,
   LogsRoute: LogsRoute,
+  TeamsTeamIdRoute: TeamsTeamIdRoute,
+  TeamsIndexRoute: TeamsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -145,7 +202,9 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/console",
-        "/logs"
+        "/logs",
+        "/teams/$teamId",
+        "/teams/"
       ]
     },
     "/": {
@@ -163,6 +222,12 @@ export const routeTree = rootRoute
     "/console/oracle": {
       "filePath": "console.oracle.tsx",
       "parent": "/console"
+    },
+    "/teams/$teamId": {
+      "filePath": "teams/$teamId.tsx"
+    },
+    "/teams/": {
+      "filePath": "teams/index.tsx"
     }
   }
 }

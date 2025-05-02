@@ -26,6 +26,11 @@ export function NavigationMenuDemo() {
                 Logs
             </Link>
           </NavigationMenuItem>
+          <NavigationMenuItem className={navigationMenuTriggerStyle()}>
+            <Link to="/teams"  >
+                Times
+            </Link>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     )
