@@ -1,30 +1,16 @@
 import { TeamsQueries } from "@/entities/teams/api";
 import { Route } from "@/routes/teams/$teamId";
+import { compose, withSuspense } from "@/shared/libs/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary, withErrorBoundary } from "react-error-boundary";
 
 export const TeamPage = () => {
   const { teamId } = Route.useParams();
-  const { data: team, isLoading } = useSuspenseQuery(
+  const { data: team } = useSuspenseQuery(
     TeamsQueries.fetchTeam({ id: teamId })
   );
 
-  console.log({ team });
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-1 items-center justify-center">Loading...</div>
-    );
-  }
-
-  if (!team) {
-    return (
-      <div className="flex flex-1 items-center justify-center">
-        Time não encontrado
-      </div>
-    );
-  }
 
   return (
     <div className="flex-1 flex justify-center items-center overflow-hidden border rounded-md">
@@ -48,17 +34,7 @@ export const TeamPage = () => {
         </div>
           
         <div className="col-span-1 p-4 rounded border">
-          <ErrorBoundary
-            fallback={
-              <div className="flex flex-1 items-center justify-center">
-                Erro ao carregar atividades do time.
-              </div>
-            }
-          >
-            <Suspense fallback={<div>Carregando atividades...</div>}>
-              <TeamActivities id={teamId} />
-            </Suspense>
-          </ErrorBoundary>
+          <TeamActivities id={teamId} />
         </div>
         <div className="col-span-1 p-4 rounded border">
           <ErrorBoundary
@@ -99,7 +75,17 @@ const TeamMembers = ({ id }: { id: string }) => {
   );
 };
 
-const TeamActivities = ({ id }: { id: string }) => {
+
+const enhance = compose<{id: string}>(
+  (component) =>
+    withErrorBoundary(component, {
+      FallbackComponent: () => <div className="flex flex-1 items-center justify-center">Erro ao carregar atividades</div>,
+    }),
+  (component) => withSuspense(component, { FallbackComponent: ()  => <div>Carregando...</div> }) 
+);
+
+
+const TeamActivities = enhance(({ id }: { id: string }) => {
   const { data: activities } = useSuspenseQuery(
     TeamsQueries.fetchTeamActivities({ id })
   );
@@ -118,4 +104,5 @@ const TeamActivities = ({ id }: { id: string }) => {
       </div>
     </div>
   );
-};
+});
+

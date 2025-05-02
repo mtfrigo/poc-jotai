@@ -6,8 +6,8 @@ import { TeamLoadingPage } from '@/pages/team/team.loading-page'
 export const Route = createFileRoute('/teams/$teamId')({
   component: TeamPage,
   pendingComponent: TeamLoadingPage,
+  errorComponent: TeamErrorPage,
   loader: () => {
     console.log("Loader...")
   },
-  errorComponent: TeamErrorPage,
 })

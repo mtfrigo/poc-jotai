@@ -7,9 +7,21 @@ import { Input } from "@/shared/ui/primitives/input";
 import { useAtom, useAtomValue } from "jotai";
 import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { compose, withSuspense } from "@/shared/libs/react";
+import { withErrorBoundary } from "react-error-boundary";
 
 
-export const ConnectionSidebar = () => {
+
+const enhance = compose(
+  (component) =>
+    withErrorBoundary(component, {
+      FallbackComponent: () => <div className="flex flex-1 items-center justify-center">Erro</div>,
+    }),
+  (component) => withSuspense(component, { FallbackComponent: ()  => <div>loading</div> }) 
+);
+
+
+export const ConnectionSidebar = enhance(() => {
   const { handleAddConnection } = useAddConnection()
   const { handleResetConnections } = useResetConnections()
   const [activeConnection, onSelectConnection] = useAtom(store.activeConnection)
@@ -60,4 +72,4 @@ export const ConnectionSidebar = () => {
       </div>
     </div>
   );
-};
+});
