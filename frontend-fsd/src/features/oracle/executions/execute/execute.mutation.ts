@@ -5,10 +5,7 @@ import { AxiosError, AxiosResponse } from "axios"
 
 export const useExecuteOracle = () => {
     const { mutate, isPending } = useMutation<AxiosResponse, AxiosError, {resourceId: string, statement: string }>({
-        mutationFn: async ({ resourceId, statement }) => { 
-            const res = await OracleService.execute({ resourceId, statement })
-            return res.data
-        }
+        mutationFn: ({ resourceId, statement }) => OracleService.execute({ resourceId, statement })
     })
 
     return {

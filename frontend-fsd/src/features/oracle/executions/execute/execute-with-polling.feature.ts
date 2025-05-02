@@ -47,11 +47,11 @@ export const useExecuteWithPolling = ({ consoleId }: Props) => {
     })
   }
 
-  const { data: execution, } = useQuery(OracleQueries.fetchByIdQuery({ executionId: oracleConsole?.executionId, enabled: false}))
+  const { data: execution, } = useQuery(OracleQueries.fetchByIdQuery({ id: oracleConsole?.executionId}))
   
   const { data: content, isFetched: isContentFetched } = useQuery(
     OracleQueries.fetchContentQuery({ 
-      executionId: execution?.id, 
+      id: execution?.id, 
       enabled: !!execution?.id && execution?.status === "SUCCESS" 
     })
   );
