@@ -4,13 +4,18 @@ import { Button } from "@/shared/ui/primitives/button";
 import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { cn } from "@/shared/libs/tailwind-merge/utils";
 import { OraclePanel } from "./console";
-import { usePanelById, useActiveConnectionPanelById} from "@/entities/panels";
+import { usePanelById, useActiveConnectionPanelById,  PanelsQueries} from "@/entities/panels";
 import { useSelectPanelTab, useNewConsole, useResetConsoles} from "@/features/oracle";
+import { useQuery } from "@tanstack/react-query";
+import { CONFIG } from "@/shared/config/auth";
 
 export const OracleConsolePage = () => {
     const connection = useActiveConnection()
 
     const [panel] = usePanelById(connection?.id)
+
+    const { data: panels } = useQuery(PanelsQueries.fetchConnectionPanels({ connectionId:connection?.id, user: CONFIG.username}))
+
     const [activePanel] = useActiveConnectionPanelById(connection?.id)
 
     const { handleSelectTab } = useSelectPanelTab(connection?.id)
