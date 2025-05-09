@@ -1,13 +1,22 @@
-import { store } from "@/entities/connections";
 import { makeConnection } from "@/shared/test/mock/factories/connections.factory";
-import { useSetAtom } from "jotai";
+import { useAddConnectionMutation } from "./add-connection.mutation";
 
 
 export const useAddConnection = () => {
-  const setConnections = useSetAtom(store.connections);
+
+  const { mutate } = useAddConnectionMutation()
 
   const handleAddConnection = () => {
-    setConnections((prev) => [...prev, makeConnection()]);
+
+    const newConnection = makeConnection()
+
+    mutate({
+      user: 'matheus_frigo',
+      favorite: false,
+      id: newConnection.id,
+      flavor: newConnection.flavor,
+      name: newConnection.name 
+    })
   };
 
   return { handleAddConnection };

@@ -1,14 +1,16 @@
-import { store  } from "@/entities/connections";
+import { ConnectionQueries, store  } from "@/entities/connections";
 import { useAddConnection } from "@/features/connections/add-connection";
 import { useResetConnections } from "@/features/connections/reset-connections";
 import { cn } from "@/shared/libs/tailwind-merge/utils";
 import { Button } from "@/shared/ui/primitives/button";
 import { Input } from "@/shared/ui/primitives/input";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { compose, withSuspense } from "@/shared/libs/react";
 import { withErrorBoundary } from "react-error-boundary";
+import { useQuery } from "@tanstack/react-query";
+import { CONFIG } from "@/shared/config/auth";
 
 
 
@@ -26,7 +28,8 @@ export const ConnectionSidebar = enhance(() => {
   const { handleResetConnections } = useResetConnections()
   const [activeConnection, onSelectConnection] = useAtom(store.activeConnection)
 
-  const connections = useAtomValue(store.connections)
+  const { data: connections } = useQuery(ConnectionQueries.fetchUserConnections({ user: CONFIG.username}))
+
   const navigate = useNavigate({ from: '/console' })
 
   return (
@@ -46,7 +49,7 @@ export const ConnectionSidebar = enhance(() => {
       </div>
       <hr className="" />
       <div className="h-full flex-1 p-1 flex-col gap-1 flex" data-testid='connection-list'>
-        {connections.map((connection) => {
+        {connections.map((connection, i) => {
           return (
             <Button
               variant="outline"
@@ -58,7 +61,7 @@ export const ConnectionSidebar = enhance(() => {
                 onSelectConnection(connection)
                 navigate({to: `/console/${connection?.flavor.toLowerCase()}`})
               }}
-              key={connection.id}
+              key={`${connection.id}#${i}`}
             >
               {connection.flavor}: {connection.name}
             </Button>
