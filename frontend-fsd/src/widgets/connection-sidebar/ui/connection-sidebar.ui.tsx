@@ -30,6 +30,8 @@ export const ConnectionSidebar = enhance(() => {
 
   const { data: connections } = useQuery(ConnectionQueries.fetchUserConnections({ user: CONFIG.username}))
 
+  console.log({connections})
+
   const navigate = useNavigate({ from: '/console' })
 
   return (
@@ -58,6 +60,8 @@ export const ConnectionSidebar = enhance(() => {
                   activeConnection?.id === connection.id,
               })}
               onDoubleClick={() => {
+                console.log("selecting database")
+                console.log({connection})
                 onSelectConnection(connection)
                 navigate({to: `/console/${connection?.flavor.toLowerCase()}`})
               }}

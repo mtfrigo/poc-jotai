@@ -8,29 +8,23 @@ export async function fetchUserConnections(user: string) {
 export async function addUserConnection({
   user,
   name,
-  id,
   flavor,
   favorite,
 }: {
   user: string;
-  id: string;
   name: string;
   flavor: "ORACLE" | "MONGO" | "KAFKA";
   favorite?: boolean;
 }) {
   const connection = new Connections({
     name,
-    id,
     flavor,
     favorite,
   });
 
   const userConnections = await UserConnections.findOne({ user });
 
-
   if (!userConnections) {
-    console.log("deu ruim");
-
     try {
       const newUserConnections = new UserConnections({
         user,
@@ -38,7 +32,6 @@ export async function addUserConnection({
       });
       
       const x = await newUserConnections.save();
-      console.log(x)
     } catch (err) {
       console.log(err);
     } finally {

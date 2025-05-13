@@ -4,22 +4,21 @@ import { Button } from "@/shared/ui/primitives/button";
 import { PlusCircleIcon, StopCircleIcon } from "lucide-react";
 import { cn } from "@/shared/libs/tailwind-merge/utils";
 import { OraclePanel } from "./console";
-import { usePanelById, useActiveConnectionPanelById,  PanelsQueries} from "@/entities/panels";
-import { useSelectPanelTab, useNewConsole, useResetConsoles} from "@/features/oracle";
+import {  useActiveConnectionPanelById,  PanelsQueries} from "@/entities/panels";
+import { useSelectPanelTab, useResetConsoles} from "@/features/oracle";
 import { useQuery } from "@tanstack/react-query";
 import { CONFIG } from "@/shared/config/auth";
+import { useAddPanel } from "@/features/oracle/consoles/add-panel/add-panel.feature";
 
 export const OracleConsolePage = () => {
     const connection = useActiveConnection()
-
-    const [panel] = usePanelById(connection?.id)
 
     const { data: panels } = useQuery(PanelsQueries.fetchConnectionPanels({ connectionId:connection?.id, user: CONFIG.username}))
 
     const [activePanel] = useActiveConnectionPanelById(connection?.id)
 
     const { handleSelectTab } = useSelectPanelTab(connection?.id)
-    const { handleAddConsole } = useNewConsole(connection?.id)
+    const { handleAddPanel } = useAddPanel()
     const { onResetConsoles } =  useResetConsoles(connection?.id)
 
     return (
@@ -34,13 +33,13 @@ export const OracleConsolePage = () => {
           <div className="flex gap-1 w-full py-1 border-b px-1">
             <Button
               className=""
-              onClick={() => handleAddConsole(connection?.name)}
+              onClick={() => handleAddPanel({ id: connection?.id, name: connection?.name})}
               size="sm"
               variant="outline"
             >
               <PlusCircleIcon />
             </Button>
-            {panel?.map((tab) => (
+            {panels?.map((tab) => (
               <Button
                 key={tab.id}
                 size="sm"

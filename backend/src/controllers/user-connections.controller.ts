@@ -16,12 +16,11 @@ export async function fetchUserConnections(req: FastifyRequest, reply: FastifyRe
 export async function addConnection(req: FastifyRequest, reply: FastifyReply) {
   const { user } = req.params as { user: string };
 
-  const { favorite, flavor, name, id } = req.body as { name: string, id: string, flavor: 'ORACLE' | 'MONGO' | 'KAFKA', favorite: boolean };
+  const { favorite, flavor, name} = req.body as { name: string,  flavor: 'ORACLE' | 'MONGO' | 'KAFKA', favorite: boolean };
 
   const connection = await addUserConnection({ 
     flavor,
     name,
-    id,
     user,
     favorite
   });

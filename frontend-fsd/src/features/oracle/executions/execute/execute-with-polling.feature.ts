@@ -1,31 +1,34 @@
-import { usePanelById, OracleExecuteBody, OracleExecuteBodySchema } from "@/entities/oracle";
+import { OracleExecuteBody, OracleExecuteBodySchema } from "@/entities/oracle";
 import { useExecuteOracle } from "./execute.mutation";
-import { useUpdateConsole } from "../../consoles";
 import { useQuery } from "@tanstack/react-query";
 import { OracleQueries } from "@/entities/oracle/api/oracle.queries";
 import { usePanelStateById } from "@/entities/panels";
 import { useEffect } from "react";
+import { useUpdatePanel } from "../../consoles/update-panel/update-panel.feature";
 
 type Props = {
     consoleId: string;
 }
 
 export const useExecuteWithPolling = ({ consoleId }: Props) => {
-  const { panel: oracleConsole} = usePanelById(consoleId)
+    const { data: oraclePanel } = useQuery(OracleQueries.fetchPanelQuery({ id: consoleId }))
+  
   const [ panelState, setPanelState ] = usePanelStateById(consoleId)
-  const { onUpdateConsole } = useUpdateConsole(consoleId)
+
+  const { handleUpdatePanel } = useUpdatePanel()
+  
   const { execute } = useExecuteOracle()
 
   const handleExecute = (params: OracleExecuteBody) => {
     const validatedParams = OracleExecuteBodySchema.parse(params);
-    
     
     setPanelState({
       isLoading: true,
       loadingMessage: 'Executando...'
     })
     
-    onUpdateConsole({
+    handleUpdatePanel(consoleId, {
+      ...oraclePanel,
       statement: validatedParams.statement,
       executionId: undefined
     });
@@ -36,7 +39,8 @@ export const useExecuteWithPolling = ({ consoleId }: Props) => {
         statement: validatedParams.statement
       }, {
       onSuccess: (data: any) => {
-        onUpdateConsole({
+        handleUpdatePanel(consoleId, {
+          ...oraclePanel,
           executionId: data.id as string,
         })
         setPanelState({
@@ -47,7 +51,7 @@ export const useExecuteWithPolling = ({ consoleId }: Props) => {
     })
   }
 
-  const { data: execution, } = useQuery(OracleQueries.fetchByIdQuery({ id: oracleConsole?.executionId}))
+  const { data: execution, } = useQuery(OracleQueries.fetchByIdQuery({ id: oraclePanel?.executionId}))
   
   const { data: content, isFetched: isContentFetched } = useQuery(
     OracleQueries.fetchContentQuery({ 
@@ -81,7 +85,7 @@ export const useExecuteWithPolling = ({ consoleId }: Props) => {
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [execution, content, isContentFetched, oracleConsole]);
+    }, [execution, content, isContentFetched, oraclePanel]);
 
     return {
         handleExecute,

@@ -5,4 +5,5 @@ export type FetchConnectionPanelsQueryParams = {
     connectionId?: string | null
 }
 
+
 export type FetchConnectionPanelsRequestParams = BaseRequestParam & FetchConnectionPanelsQueryParams

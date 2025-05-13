@@ -4,7 +4,7 @@ import { ConnectionPanelsDto } from "../dto/panels.dto";
 import { mapConnectionPanels } from "../mapper";
 
 export const fetchUserConnectionsPanels = async ({ user,  connectionId, config  }: FetchConnectionPanelsRequestParams) => {
-    const res = await  api.get<ConnectionPanelsDto>(`/connections/${user}/panels/${connectionId}`, {
+    const res = await  api.get<ConnectionPanelsDto>(`/console/${user}/panels/${connectionId}`, {
       ...config,
     });
 

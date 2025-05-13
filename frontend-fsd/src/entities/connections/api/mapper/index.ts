@@ -3,5 +3,5 @@ import { UserConnectionsDto } from "../dto/connections.dto";
 
 
 export const mapUserConnections = (data: UserConnectionsDto): Connection[] => {
-    return data.connections.map(({ flavor, name } ) => ({ flavor, id: name, name}))
+    return data.connections.map(({ flavor, id, name } ) => ({ flavor, id, name}))
 }

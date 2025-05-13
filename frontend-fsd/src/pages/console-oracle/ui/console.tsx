@@ -1,6 +1,4 @@
 import { useActiveConnection } from "@/entities/connections";
-import { usePanelById } from "@/entities/oracle";
-import { useUpdateConsole } from "@/features/oracle";
 import { useExecuteWithPolling } from "@/features/oracle";
 import { Console } from "@/shared/ui/components/console";
 import { Button } from "@/shared/ui/primitives/button";
@@ -20,6 +18,10 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { Result } from "./result";
+import { useQuery } from "@tanstack/react-query";
+import { OracleQueries } from "@/entities/oracle/api";
+import { useUpdatePanel } from "@/features/oracle/consoles/update-panel/update-panel.feature";
+import { useRef } from "react";
 
 type Props = {
   panelId: string;
@@ -27,11 +29,12 @@ type Props = {
 
 export const OraclePanel = ({ panelId }: Props) => {
   const connection = useActiveConnection();
-  const { onUpdateConsole } = useUpdateConsole(panelId);
+  // const { onUpdateConsole } = useUpdateConsole(panelId);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const {
-    panel: oraclePanel,
-  } = usePanelById(panelId);
+  const { data: oraclePanel } = useQuery(OracleQueries.fetchPanelQuery({ id: panelId }))
+
+  const { handleUpdatePanel } = useUpdatePanel()
 
   const { execution, handleExecute,  data, isLoading, loadingMessage } = useExecuteWithPolling({ consoleId: panelId });
 
@@ -44,11 +47,23 @@ export const OraclePanel = ({ panelId }: Props) => {
   };
 
   const handleCloseExecution = () => {
-    onUpdateConsole({
-      statement: oraclePanel?.statement ?? "",
-      executionId: undefined,
-    });
+    // onUpdateConsole({
+    //   statement: oraclePanel?.statement ?? "",
+    //   executionId: undefined,
+    // });
   };
+
+  const handleSavePanel = () => {
+    console.log("save")
+
+    console.log(textareaRef.current?.value)
+
+    handleUpdatePanel(panelId, { 
+      ...oraclePanel,
+      statement: textareaRef.current?.value ?? "",
+      schema: undefined
+    })
+  }
 
   return (
     <Console data-testid="oracle-console">
@@ -77,9 +92,7 @@ export const OraclePanel = ({ panelId }: Props) => {
             </div>
             <div>
               <Button
-                onClick={() =>
-                  onUpdateConsole({ statement: oraclePanel?.statement ?? "" })
-                }
+                onClick={handleSavePanel}
                 variant="outline"
                 size="sm"
               >
@@ -91,10 +104,11 @@ export const OraclePanel = ({ panelId }: Props) => {
         <Console.Body>
           <Textarea
             className="flex-1"
+            ref={textareaRef} 
             defaultValue={oraclePanel?.statement ?? ""}
-            onBlur={(e) => {
-              onUpdateConsole({ statement: e.target.value });
-            }}
+            // onBlur={(e) => {
+              // onUpdateConsole({ statement: e.target.value });
+            // }}
           />
         </Console.Body>
       </Console.Panel>
@@ -111,7 +125,7 @@ export const OraclePanel = ({ panelId }: Props) => {
               <Button
                 variant="outline"
                 size="sm"
-                disabled={!isLoading && !!oraclePanel.executionId}
+                disabled={!isLoading && !!oraclePanel?.executionId}
                 onClick={handleRefresh}
               >
                 <RefreshCwIcon />
@@ -133,7 +147,7 @@ export const OraclePanel = ({ panelId }: Props) => {
         </Console.Toolbar>
           <Result 
             loadingMessage={loadingMessage}
-            executionId={oraclePanel.executionId}
+            executionId={oraclePanel?.executionId}
             data={data}  
             isLoading={isLoading} 
           />
